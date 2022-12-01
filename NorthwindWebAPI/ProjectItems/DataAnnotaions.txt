@@ -1,0 +1,23 @@
+﻿DATA ANNOTATIONS
+
+
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+
+Attribute			Açıklama
+=========			========
+Key					Alanın birincil anahtar olduğu belirtilir ve veritabanı oluşturulurken otomatik artan sayı olarak ayarlanır.
+Required			Alanın zorunlu olduğu belirtilir
+Column				Alanın veritabanındaki alanı ile ilgili ayarları belirtilir örnek veritabanında oluşacak olan alanadı(Name), tür adı(TypeName) veya Order(Sira – Çoklu Key kullanımında kullanılır)
+DataType			Alanın veritürü belirtili örnek DataType’lar şu şekildedir. Date,Time,Currency,EmailAdress,Password v.b
+HiddenInput			Alanın sayfada gösterilmemesini sağlar ama veri server’a gönderilir sadece kullanıcıdan gizlenir.
+ReadOnly			Alanın sadece okunabilir özelliğine sahip olması için kullanılır.
+DisplayFormat		Sayfaya bastırılacak fotmat bilgisi belirlenir genellikle Tarih, Saat, Sayı formatlama gibi durumlarda kullanılır.
+Table				Veritabanında oluşacak tablonun adı(Name) veya Şema(Schema)’sı belirtilir.
+StringLength		Girilecek karakter sayısını sınırlamada kullanılır.
+RegularExpression	Regex neredeyse tüm programlama dillerinde kullanılan bir doğrulama desenidir.
+Range				Sayısal değerler için aralık belirtmede kullanılır.
+Remote				Kaydın varolup olmadığını kontrol etme örnek sayfa yenilemeden girilen kullanıcı adının var olup olmadığını kontrol etme.
+Compare				Karşılaştırma yapmak için kullanılır örnek girilen iki şifrenin aynı olup olmamasını karşılaştırma.
+ScaffoldColumn		Düzenlenmesini istemediğimiz model özelliği için kullanılır. Böylece bu alan EditorForModel kullandığımızda gizlenecektir. Örneğin, modelin id sini kendimiz belirlemiyoruz. Bu özelliği veritabanına bırakıyoruz. Dolayısıyla bu alan için ScaffoldColumn niteliği kullanabiliriz.

@@ -1,0 +1,30 @@
+﻿1. Öncelikle aşağıdaki 3 paketi projeye dahil edelim
+----------------------------------------------------
+Microsoft.EntityFrameworkCore.SqlServer 6.0.10
+Microsoft.EntityFrameworkCore.Tools 6.0.10
+Microsoft.VisualStudio.Web.CodeGeneration.Design 6.0.10
+Microsoft.Extensions.Configuration 6.0.0
+Microsoft.AspNetCore.Identity.EntityFrameworkCore 6.0.10
+AutoMapper
+Automapper.Extensions.Microsoft.DependencyInjection
+Swashbuckle.AspNetCore
+Microsoft.jQuery.Unobtrusive.Validation (Data Annotations)
+
+2. Hazır veritabanının projeye dahil edilmesi
+----------------------------------------------
+PM(Package Manager) ile;
+
+* PM> Scaffold-DbContext "Server=PHOKAIA;Database=Northwind; User Id=sa; Password=Doga251200;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+
+Çeşitli DB güncellemelerinden sonra da aşağıdaki kısmın çalıştırılıp son halinin projeye yansıtılması yapılmalıdır
+
+* PM> Scaffold-DbContext "Server=PHOKAIA;Database=Northwind; User Id=sa; Password=Doga251200;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
+
+3. DB Connection string --> appsettings.json
+
+
+=====
+
+AutoMapper, projemizde Entity nesnelerini database’den çektiğimiz haliyle değil, bu nesneleri istediğimiz (UI’da bizim için gerekli olacak) formata çevirmemizi sağlayan basit bir kütüphanedir. DTO (Data Transfer Object) ise AutoMapper’ın dönüştürmesini istediğimiz format modelidir. (SQL View gibi)
+
+
