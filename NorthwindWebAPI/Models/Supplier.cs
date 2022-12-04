@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 namespace NorthwindWebAPI.Models
 {
     public partial class Supplier

@@ -84,7 +84,7 @@ namespace NorthwindWebAPI.Models
                 entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
                 entity.Property(e => e.CategoryName).HasMaxLength(15);
-
+                
                 entity.Property(e => e.Description).HasColumnType("ntext");
 
                 entity.Property(e => e.Picture).HasColumnType("image");
@@ -676,7 +676,7 @@ namespace NorthwindWebAPI.Models
 
             modelBuilder.Entity<Supplier>(entity =>
             {
-                entity.HasIndex(e => e.CompanyName, "CompanyName");
+                entity.HasIndex(e => e.CompanyName, "Tedarikçi");
 
                 entity.HasIndex(e => e.PostalCode, "PostalCode");
 

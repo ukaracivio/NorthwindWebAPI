@@ -34,6 +34,7 @@ namespace NorthwindWebAPI.Controllers
 
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
+
             if (category == null)
             {
                 return NotFound();

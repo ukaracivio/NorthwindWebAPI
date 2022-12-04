@@ -28,8 +28,10 @@ namespace NorthwindWebAPI.Controllers
                 .Include(p => p.Category)
                 .Include(p => p.Supplier);
 
+
             return View(await northwindContext.ToListAsync());
 
+            // Bir diğer LINQ sorgusu
             //var products = from p in _context.Products
             //               join c in _context.Categories on p.CategoryId equals c.CategoryId
             //               join s in _context.Suppliers on p.SupplierId equals s.SupplierId
@@ -55,30 +57,31 @@ namespace NorthwindWebAPI.Controllers
         private dynamic ToCategoriesSelectList(DbSet<Category> categories, string valueField, string textField)
         {
             // Öncelikle bir liste yaratıyorum.
-            List<SelectListItem> list = new List<SelectListItem>();
+            List<SelectListItem> categorylist = new List<SelectListItem>();
 
             //parametre olara gelen categories tablosu bastan sona okunarak bir listeye alınıyor.
             foreach (var item in categories)
             {
-                list.Add(new SelectListItem()
+                categorylist.Add(new SelectListItem()
                 {
-                    Text = item.CategoryName,
-                    Value = item.CategoryId.ToString()
+                    Value = item.CategoryId.ToString(),
+                    Text = item.CategoryName
                 });
             }
 
-            return new SelectList(list, "Value", "Text");
+
+            return new SelectList(categorylist, "Value", "Text");
 
         }
 
         [NonAction]
         private dynamic ToSuppliersSelectList(DbSet<Supplier> suppliers, string valueField, string textField)
         {
-            List<SelectListItem> list = new List<SelectListItem>();
+            List<SelectListItem> supplierlist = new List<SelectListItem>();
 
             foreach (var item in suppliers)
             {
-                list.Add(new SelectListItem()
+                supplierlist.Add(new SelectListItem()
                 {
                     Value = item.SupplierId.ToString(),
                     Text = item.CompanyName
@@ -86,7 +89,7 @@ namespace NorthwindWebAPI.Controllers
                 });
             }
 
-            return new SelectList(list, "Value", "Text");
+            return new SelectList(supplierlist, "Value", "Text");
 
         }
 
@@ -116,8 +119,22 @@ namespace NorthwindWebAPI.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId");
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "SupplierId");
+            var categories = _context.Categories.ToList();
+            var suppliers = _context.Suppliers.ToList();
+
+            if (categories != null)
+            {
+                ViewBag.CategoryList = ToCategoriesSelectList(_context.Categories, "CategoryId", "CategoryName");
+            }
+
+            if (suppliers != null)
+            {
+                ViewBag.SupplierList = ToSuppliersSelectList(_context.Suppliers, "SupplierId", "CompanyName");
+            }
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "CompanyName");
+
             return View();
         }
 
@@ -134,8 +151,10 @@ namespace NorthwindWebAPI.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "SupplierId", product.SupplierId);
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "CompanyName", product.SupplierId);
+            
             return View(product);
         }
 
@@ -143,12 +162,13 @@ namespace NorthwindWebAPI.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var categories = _context.Categories.ToList();
+            var suppliers = _context.Suppliers.ToList();
+
             if (categories != null)
             {
                 ViewBag.CategoryList = ToCategoriesSelectList(_context.Categories, "CategoryId", "CategoryName");
             }
-
-            var suppliers = _context.Suppliers.ToList();
+            
             if (suppliers != null)
             {
                 ViewBag.SupplierList = ToSuppliersSelectList(_context.Suppliers, "SupplierId", "CompanyName");
@@ -160,12 +180,15 @@ namespace NorthwindWebAPI.Controllers
             }
 
             var product = await _context.Products.FindAsync(id);
+
             if (product == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "SupplierId", product.SupplierId);
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "CompanyName", product.SupplierId);
+
             return View(product);
         }
 
@@ -201,8 +224,10 @@ namespace NorthwindWebAPI.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "SupplierId", product.SupplierId);
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "CompanyName", product.SupplierId);
+            
             return View(product);
         }
 
@@ -218,6 +243,7 @@ namespace NorthwindWebAPI.Controllers
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
+
             if (product == null)
             {
                 return NotFound();
@@ -235,7 +261,9 @@ namespace NorthwindWebAPI.Controllers
             {
                 return Problem("Entity set 'NorthwindContext.Products'  is null.");
             }
+
             var product = await _context.Products.FindAsync(id);
+            
             if (product != null)
             {
                 _context.Products.Remove(product);
