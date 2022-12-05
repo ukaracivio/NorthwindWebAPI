@@ -21,9 +21,33 @@ namespace NorthwindWebAPI.Controllers
         // GET: Territories
         public async Task<IActionResult> Index()
         {
-            var northwindContext = _context.Territories.Include(t => t.Region);
+            var northwindContext = _context.Territories
+                                .Include(t => t.Region);
+
             return View(await northwindContext.ToListAsync());
         }
+
+        // *************************************************
+        // Territory sayfalarında kullanılacak select list hazırlanması
+        private dynamic ToRegionsSelectList(DbSet<Region> regions,string valueField,string TextField)
+        {
+            List<SelectListItem> regionlist = new List<SelectListItem>();
+
+            foreach (var item in regions)
+            {
+                regionlist.Add(new SelectListItem()
+                {
+                    Value = item.RegionId.ToString(),
+                    Text = item.RegionDescription
+                });
+
+            }
+
+            regionlist.Insert(0, new SelectListItem { Value = "0", Text = "--- Lütfen Bölge Seçiniz ---" });
+
+            return new SelectList(regionlist, "Value", "Text");
+        }
+
 
         // GET: Territories/Details/5
         public async Task<IActionResult> Details(string id)

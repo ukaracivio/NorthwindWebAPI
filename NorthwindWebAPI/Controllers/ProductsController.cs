@@ -23,10 +23,12 @@ namespace NorthwindWebAPI.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            // LINQ devreye giriyor
+            // LINQ devreye giriyor...Data oluşturuluyor...ve View içine Liste yapısı halinde postalanıyor....Include==Inner Join gibi
+
             var northwindContext = _context.Products
                 .Include(p => p.Category)
-                .Include(p => p.Supplier);
+                .Include(p => p.Supplier)
+                .OrderBy(p => p.ProductName);
 
 
             return View(await northwindContext.ToListAsync());

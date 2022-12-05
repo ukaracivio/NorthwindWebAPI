@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace NorthwindWebAPI.Models
 {
@@ -11,9 +12,14 @@ namespace NorthwindWebAPI.Models
             Products = new HashSet<Product>();
         }
 
+        [Key]
         public int SupplierId { get; set; }
+        [Required]
+        [DisplayName("Tedarikçi")]
         public string CompanyName { get; set; } = null!;
+        [DisplayName("Sorumlu Kişi")]
         public string? ContactName { get; set; }
+        [DisplayName("Ünvan")]
         public string? ContactTitle { get; set; }
         public string? Address { get; set; }
         public string? City { get; set; }
