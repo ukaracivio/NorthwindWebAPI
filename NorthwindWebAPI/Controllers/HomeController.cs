@@ -27,46 +27,59 @@ namespace NorthwindWebAPI.Controllers
         }
 
         [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Login()
         {
-            User _user = new User(); 
-
-
-            return View(_user);
-        }
-
-        [HttpPost]
-        public IActionResult Login(User _user)
-        {
-            // LINQ : Language Integrated Query
-            var status = _context.Users.Where
-                (m =>m.UserName == _user.UserName && m.UserPass == _user.UserPass).FirstOrDefault();
-
-            if (status == null)
-            {
-                ViewBag.LoginStatus = 0;
-                return RedirectToAction("Unsuccess", "Home");
-
-            }
-            else
-            {
-                return RedirectToAction("Success", "Home");
-            }
-
-
-            return View(_user);
-        }
-
-        public IActionResult Success()
-        {
-
             return View();
         }
-        public IActionResult Unsuccess()
-        {
 
-            return View();
-        }
+
+        //[HttpGet]
+        //public IActionResult Login()
+        //{
+        //    User _user = new User(); 
+
+
+        //    return View(_user);
+        //}
+
+        //[HttpPost]
+        //public IActionResult Login(User _user)
+        //{
+        //    // LINQ : Language Integrated Query
+        //    var status = _context.Users.Where
+        //        (m =>m.UserName == _user.UserName && m.UserPass == _user.UserPass).FirstOrDefault();
+
+        //    if (status == null)
+        //    {
+        //        ViewBag.LoginStatus = 0;
+        //        return RedirectToAction("Unsuccess", "Home");
+
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Success", "Home");
+        //    }
+
+
+        //    return View(_user);
+        //}
+
+        //public IActionResult Success()
+        //{
+
+        //    return View();
+        //}
+        //public IActionResult Unsuccess()
+        //{
+
+        //    return View();
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

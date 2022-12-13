@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using NorthwindWebAPI.Models;
 using System.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using X.PagedList;
 
 namespace NorthwindWebAPI.Controllers
 {
@@ -21,17 +22,17 @@ namespace NorthwindWebAPI.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int page=1)
         {
             // LINQ devreye giriyor...Data oluşturuluyor...ve View içine Liste yapısı halinde postalanıyor....Include==Inner Join gibi
 
-            var northwindContext = _context.Products
+            var productsContext = _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
                 .OrderBy(p => p.ProductName);
 
 
-            return View(await northwindContext.ToListAsync());
+            return View(productsContext.ToPagedList(page,8));
 
             // Bir diğer LINQ sorgusu
             //var products = from p in _context.Products

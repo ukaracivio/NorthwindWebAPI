@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Transfer Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form method="post" asp-controller="Transfer" asp-action="Index" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <button type="submit">Import Excel File</button>
+    <br />
+    <br />
+    @{
+        if (ViewBag.Message != null)
+        {
+            <div>
+                @ViewBag.Message
+            </div>
+        }
+    }
+</form>

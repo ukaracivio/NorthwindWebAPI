@@ -14,6 +14,7 @@ namespace NorthwindWebAPI.Models
         }
 
         [Key]
+        [DisplayName("Bölge Kodu")]
         public int RegionId { get; set; }
         [Required]
         [DisplayName("Bölge Tanımı")]

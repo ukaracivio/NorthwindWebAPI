@@ -22,16 +22,18 @@ namespace NorthwindWebAPI.Controllers
         public async Task<IActionResult> Index()
         {
             var northwindContext = _context.Territories
-                                .Include(t => t.Region);
+                                .Include(t => t.Region)
+                                .OrderBy(t=> t.Region.RegionDescription)
+                                .ThenBy(t => t.TerritoryDescription);
+
 
             return View(await northwindContext.ToListAsync());
         }
 
-        // *************************************************
         // Territory sayfalarında kullanılacak select list hazırlanması
         private dynamic ToRegionsSelectList(DbSet<Region> regions,string valueField,string TextField)
         {
-            List<SelectListItem> regionlist = new List<SelectListItem>();
+            List<SelectListItem> regionlist = new List<SelectListItem>(); // region tanımlarını tutacak liste....
 
             foreach (var item in regions)
             {
@@ -71,7 +73,17 @@ namespace NorthwindWebAPI.Controllers
         // GET: Territories/Create
         public IActionResult Create()
         {
+            var regions = _context.Regions.ToList();
+
+            if (regions != null)
+            {
+                ViewBag.RegionList = ToRegionsSelectList(_context.Regions, "RegionId", "RegionDescription");
+
+            }
+
+
             ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionId");
+            
             return View();
         }
 
@@ -82,30 +94,48 @@ namespace NorthwindWebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TerritoryId,TerritoryDescription,RegionId")] Territory territory)
         {
+            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionId", territory.RegionId);
+
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(territory);
+
                 await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionId", territory.RegionId);
+            
             return View(territory);
         }
 
         // GET: Territories/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
+            var regions = _context.Regions.ToList();
+
+            if (regions != null)
+            {
+                ViewBag.RegionList = ToRegionsSelectList(_context.Regions, "RegionId", "RegionDescription");
+
+            }
+
             if (id == null || _context.Territories == null)
             {
                 return NotFound();
             }
 
             var territory = await _context.Territories.FindAsync(id);
+
             if (territory == null)
             {
                 return NotFound();
             }
+            
             ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionId", territory.RegionId);
+            
             return View(territory);
         }
 
@@ -126,6 +156,7 @@ namespace NorthwindWebAPI.Controllers
                 try
                 {
                     _context.Update(territory);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

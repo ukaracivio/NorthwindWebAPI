@@ -1,4 +1,10 @@
-﻿@model IEnumerable<NorthwindWebAPI.Models.Product>
+﻿@*@model IEnumerable<NorthwindWebAPI.Models.Product>*@
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+
+@model IPagedList<NorthwindWebAPI.Models.Product>
+
+
 
 @{
     ViewData["Title"] = "Index";
@@ -14,31 +20,40 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProductName)
+                Ürün Adı
+                @*@Html.DisplayNameFor(model => model.ProductName)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.QuantityPerUnit)
+                Adet
+                @*@Html.DisplayNameFor(model => model.QuantityPerUnit)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UnitPrice)
+                Fiyat
+                @*@Html.DisplayNameFor(model => model.UnitPrice)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UnitsInStock)
+                Stok
+                @*@Html.DisplayNameFor(model => model.UnitsInStock)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UnitsOnOrder)
+                UnitsOnOrder
+                @*@Html.DisplayNameFor(model => model.UnitsOnOrder)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReorderLevel)
+                ReorderLevel
+                @*@Html.DisplayNameFor(model => model.ReorderLevel)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Discontinued)
+                Disc
+                @*@Html.DisplayNameFor(model => model.Discontinued, new { @})*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category.CategoryName)
+                Kategori
+                @*@Html.DisplayNameFor(model => model.Category.CategoryName)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Supplier.CompanyName)
+                CompanyName
+                @*@Html.DisplayNameFor(model => model.Supplier.CompanyName, new { @class="form-control"})*@
             </th>
 
             <th></th>
@@ -83,3 +98,4 @@
     }
     </tbody>
 </table>
+@Html.PagedListPager((IPagedList)Model,page => Url.Action("Index",new {page}))

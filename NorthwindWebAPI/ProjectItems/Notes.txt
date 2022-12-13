@@ -27,4 +27,8 @@ PM(Package Manager) ile;
 
 AutoMapper, projemizde Entity nesnelerini database’den çektiğimiz haliyle değil, bu nesneleri istediğimiz (UI’da bizim için gerekli olacak) formata çevirmemizi sağlayan basit bir kütüphanedir. DTO (Data Transfer Object) ise AutoMapper’ın dönüştürmesini istediğimiz format modelidir. (SQL View gibi)
 
+=========================
+
+13.12.2022 - Excel Transferi ve Login/Register işlemleri
+
 
