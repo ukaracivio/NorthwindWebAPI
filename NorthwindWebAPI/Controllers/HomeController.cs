@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NorthwindWebAPI.Models;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using NorthwindWebAPI.ViewModels;
+using Scrypt;
 
 namespace NorthwindWebAPI.Controllers
 {
@@ -8,6 +11,7 @@ namespace NorthwindWebAPI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly NorthwindContext _context;
+
         public HomeController(ILogger<HomeController> logger,NorthwindContext context)
         {
             _logger = logger;
@@ -32,11 +36,95 @@ namespace NorthwindWebAPI.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Register(RegisterVM registerVM)
+        {
+            // Şifreleme yaparak kullanıcıyı register etme.
+            // Kullanılacak Paket Scrypt
+
+            ScryptEncoder encoder = new ScryptEncoder();
+
+            var result = _context.Customers
+                        .Where(c => c.CustomerId == registerVM.CustomerID)
+                        .SingleOrDefault();
+
+            if (result == null)
+            {
+                ViewBag.Message = "Customer Id bulunamadı";
+                return View();
+            }
+
+            if (result.UserName != null)
+            {
+                ViewBag.Message = "Bu Customer Id zaten kayıtlı...";
+            }
+
+            var checkname = _context.Customers
+                        .Where(c => c.UserName == registerVM.UserName)
+                        .SingleOrDefault();
+
+            if (checkname != null)
+            {
+                ViewBag.Message = "Bu kullanıcı adı (UserName) zaten kayıtlı...";
+                return View();
+
+            }
+
+
+            result.UserName = registerVM.UserName;
+            result.UserPass = encoder.Encode(registerVM.UserPass); // view ekranından verilen şifreyi şifreliyor.
+
+            _context.SaveChanges();
+
+            ViewBag.Message = "Kayıt işlemi başarılı....Sisteme giriş yapabilirsiniz...";
+
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Login(LoginVM loginVM)
+        {
+            ScryptEncoder encoder = new ScryptEncoder();
+
+            var validCustomer = (from c in _context.Customers
+                                 where c.UserName.Equals(loginVM.UserName)
+                                 select c).SingleOrDefault();
+
+            if (validCustomer == null) 
+            {
+                ViewBag.Message = " Geçersiz kullanıcı adı veya şifre.......";
+                return View();
+            }
+
+            bool isValidCustomer = encoder.Compare(loginVM.UserPass, validCustomer.UserPass);
+
+            if (isValidCustomer) 
+            {
+                ViewBag.Message = " Kullanıcı girişi onaylandı...Ana sayfaya dönebilirsiniz....";
+                return View();
+            }
+            else
+            {
+                ViewBag.Message = " Geçersiz kullanıcı adı veya şifre.......";
+                return View();
+            }
+
+
+
+
+            return View();
+        }
+
+
+
+
+
 
 
         //[HttpGet]
